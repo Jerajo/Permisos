@@ -1,0 +1,45 @@
+﻿@model PermisoDto
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div>
+        <h4>Permiso #@Model.Id</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.NombreEmpleado)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.NombreEmpleado)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ApellidosEmpleado)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ApellidosEmpleado)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TipoPermiso)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TipoPermiso)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FechaPermiso)
+            </dt>
+            <dd>
+                @Model.FechaPermiso.ToString("dd/MM/yyyy")
+            </dd>
+        </dl>
+
+        <button class="btn btn-danger" data-toggle="modal"
+                data-target="#exampleModal">
+            Eliminar
+        </button>
+    </div>
+
+    <partial name="_DeleteDialog" />

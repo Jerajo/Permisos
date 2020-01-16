@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PermisoDto>
+@{
+    ViewData["Title"] = "Permisos";
+}
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NombreEmpleado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApellidosEmpleado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoPermiso)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaPermiso)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var permiso in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => permiso.NombreEmpleado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => permiso.ApellidosEmpleado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => permiso.TipoPermiso)
+            </td>
+            <td>
+                @permiso.FechaPermiso.ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Html.ActionLink("Ver permiso", "VerPermiso", new { permisoId = permiso.Id })
+            </td>
+        </tr>
+    }
+</table>

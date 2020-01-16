@@ -1,0 +1,53 @@
+﻿@model PermisoParaCreaciónDto
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h4>Formulario de permisos</h4>
+<hr />
+
+@using (Html.BeginForm("SolicitarPermiso", "Permisos", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+    <label asp-for="NombreEmpleado" class="control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="NombreEmpleado" class="form-control" />
+            <span asp-validation-for="NombreEmpleado" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ApellidosEmpleado" class="control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="ApellidosEmpleado" class="form-control" />
+            <span asp-validation-for="ApellidosEmpleado" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TipoPermisoId" class="control-label"></label>
+        <div class="col-md-10">
+            @Html.DropDownListFor(p => p.TipoPermisoId,
+           new SelectList(Model.TiposPermisos, "Id", "Descripción"), "",
+           new { @class = "form-control" })
+            <span asp-validation-for="TipoPermisoId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaPermiso" class="control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="FechaPermiso" type="date" class="form-control" />
+            <span asp-validation-for="FechaPermiso" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button asp-action="SolicitarPermiso" type="submit" 
+            class="btn btn-outline-primary">Enviar Solicitud</button>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
