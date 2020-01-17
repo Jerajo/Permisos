@@ -8,40 +8,40 @@ using System.Diagnostics;
 
 namespace Permisos.Controllers
 {
-    public abstract class BaseController : Controller
+	public abstract class BaseController : Controller
 	{
 		public BaseController(ILogger<PermisosController> logger,
-			IUnidadDeTrabajo unitOfWork,
-			IMapper mapper)
+			IUnidadDeTrabajo unidadDeTrabajo,
+			IMapper mapeador)
 		{
 			Guard.Against.Null(logger, nameof(logger));
-			Guard.Against.Null(unitOfWork, nameof(unitOfWork));
-			Guard.Against.Null(mapper, nameof(mapper));
+			Guard.Against.Null(unidadDeTrabajo, nameof(unidadDeTrabajo));
+			Guard.Against.Null(mapeador, nameof(mapeador));
 
 			Logger = logger;
-			UnitOfWork = unitOfWork;
-			Mapper = mapper;
+			UnidadDeTrabajo = unidadDeTrabajo;
+			Mapeador = mapeador;
 		}
 
 		#region Propiedades
 		protected ILogger<PermisosController> Logger { get; }
-		protected IUnidadDeTrabajo UnitOfWork { get; }
-		protected IMapper Mapper { get; }
+		protected IUnidadDeTrabajo UnidadDeTrabajo { get; }
+		protected IMapper Mapeador { get; }
 		#endregion
 
-		#region "Métodos Auxiliares"
-		public IActionResult Privacy()
+		#region "Métodos Compartidos"
+		public virtual IActionResult PolíticasDePrivacidad()
 		{
 			return View();
 		}
 
-		public IActionResult ResourceNotFound()
+		public virtual IActionResult PáginaNoEncontrada()
 		{
 			return View();
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
+		public virtual IActionResult Error()
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}

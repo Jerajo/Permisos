@@ -1,4 +1,4 @@
-﻿namespace Permisos.Común.Dominio.Models
+﻿namespace Permisos.Pruebas
 {
 	public enum TipoPermisoEnumerador
 	{

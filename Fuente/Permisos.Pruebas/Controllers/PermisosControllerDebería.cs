@@ -1,23 +1,22 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Permisos.Común.Dominio.Models;
+using Permisos.Común.Persistencia;
+using Permisos.Común.Persistencia.Servicios;
 using Permisos.Controllers;
-using System;
+using Permisos.SqlServer.Entidades;
 using Permisos.SqlServer.Servicios;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContext;
-using Permisos.SqlServer.Entidades;
-using Permisos.Común.Persistencia;
-using Permisos.Común.Persistencia.Servicios;
-using Microsoft.Extensions.Logging;
-using Permisos.Común.Dominio.Models;
 
-namespace TestAPI.Test
+namespace Permisos.Pruebas
 {
 	[TestClass]
 	public class PermisosControllerDebería
@@ -48,7 +47,7 @@ namespace TestAPI.Test
 		public void InitializeSut()
 		{
 			_permisosRepositorio = _unidadDeTrabajo.Repositorio<Permiso>();
-			
+
 			var objectValidator = new Mock<IObjectModelValidator>();
 
 			objectValidator.Setup(o => o.Validate(
@@ -104,9 +103,7 @@ namespace TestAPI.Test
 		[TestMethod]
 		public void MostrarDetallesDelPermiso()
 		{
-			var permisoId = 1;
-
-			var resultado = _sut.VerPermiso(permisoId) as ViewResult;
+			var resultado = _sut.VerPermiso(permisoId: 1) as ViewResult;
 
 			Assert.IsNotNull(resultado);
 		}
@@ -114,11 +111,10 @@ namespace TestAPI.Test
 		[TestMethod]
 		public void NoMostrarDetallesDelPermiso()
 		{
-			var permisoId = 0;
+			var resultado = _sut.VerPermiso(permisoId: 0)
+				as RedirectToActionResult;
 
-			var resultado = _sut.VerPermiso(permisoId) as ViewResult;
-
-			Assert.IsNull(resultado);
+			Assert.IsNotNull(resultado);
 		}
 		#endregion
 
@@ -134,13 +130,13 @@ namespace TestAPI.Test
 		[TestMethod]
 		public void SolicitarUnPermiso()
 		{
-			var cuentaInicial = _permisosRepositorio.GetAll().Count();
-			var permiso = _permisosRepositorio.GetAll().First();
+			var cuentaInicial = _permisosRepositorio.ObtenerColecciónCompleta().Count();
+			var permiso = _permisosRepositorio.ObtenerColecciónCompleta().First();
 			var permisoParaCreación = _mapeador
 				.Map<PermisoParaCreaciónDto>(permiso);
 
 			_sut.SolicitarPermiso(permisoParaCreación);
-			var cuentaActual = _permisosRepositorio.GetAll().Count();
+			var cuentaActual = _permisosRepositorio.ObtenerColecciónCompleta().Count();
 
 			Assert.AreNotEqual(cuentaInicial, cuentaActual);
 		}
@@ -166,11 +162,14 @@ namespace TestAPI.Test
 		[TestMethod]
 		public void EliminarPermiso()
 		{
-			var cuentaInicial = _permisosRepositorio.GetAll().Count();
-			var permisoId = 3;
+			var cuentaInicial = _permisosRepositorio
+				.ObtenerColecciónCompleta()
+				.Count();
 
-			_sut.EliminarPermiso(permisoId);
-			var cuentaActual = _permisosRepositorio.GetAll().Count();
+			_sut.EliminarPermiso(permisoId: 3);
+			var cuentaActual = _permisosRepositorio
+				.ObtenerColecciónCompleta()
+				.Count();
 
 			Assert.AreNotEqual(cuentaInicial, cuentaActual);
 		}
@@ -178,13 +177,10 @@ namespace TestAPI.Test
 		[TestMethod]
 		public void NoEliminarPermiso_IdNoEncontrado()
 		{
-			var cuentaInicial = _permisosRepositorio.GetAll().Count();
-			var permisoId = 0;
+			var result = _sut.EliminarPermiso(permisoId: 0)
+				as RedirectToActionResult;
 
-			_sut.EliminarPermiso(permisoId);
-			var cuentaActual = _permisosRepositorio.GetAll().Count();
-
-			Assert.AreEqual(cuentaInicial, cuentaActual);
+			Assert.IsNotNull(result);
 		}
 		#endregion
 	}

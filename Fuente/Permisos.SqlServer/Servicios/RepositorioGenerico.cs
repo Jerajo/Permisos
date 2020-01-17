@@ -19,31 +19,31 @@ namespace Permisos.SqlServer.Servicios
 		}
 
 		#region GET
-		public T Find(int id) =>
-			_context.Data<T>()
+		public T Buscar(int id) =>
+			_context.Datos<T>()
 				.FirstOrDefault(m => m.Id == id);
 
-		public IEnumerable<T> GetAll() =>
-			_context.Data<T>();
+		public IEnumerable<T> ObtenerColecciónCompleta() =>
+			_context.Datos<T>();
 
-		public IEnumerable<T> Where(Func<T, bool> predicate) =>
-			_context.Data<T>().Where(predicate);
+		public IEnumerable<T> Dónde(Func<T, bool> predicate) =>
+			_context.Datos<T>().Where(predicate);
 		#endregion
 
 		#region POST
-		public void AddRange(IEnumerable<T> models)
+		public void AñadirLista(IEnumerable<T> models)
 		{
 			foreach (var model in models)
-				Add(model);
+				Añadir(model);
 		}
 
-		public void Add(T model) =>
-			_context.AddEntity(model);
+		public void Añadir(T model) =>
+			_context.Añadir(model);
 		#endregion
 
 		#region DELETE
-		public void Delete(T model) =>
-			_context.RemoveEntity(model);
+		public void Eliminar(T model) =>
+			_context.Eliminar(model);
 		#endregion
 	}
 }
