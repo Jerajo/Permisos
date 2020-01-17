@@ -6,11 +6,11 @@ namespace Permisos.Común.Persistencia.Servicios
 {
 	public interface IRepositorio<T> where T : class, IEntidad
 	{
-		IEnumerable<T> GetAll();
-		IEnumerable<T> Where(Func<T, bool> predicate);
-		T Find(int id);
-		void AddRange(IEnumerable<T> models);
-		void Add(T model);
-		void Delete(T model);
+		IEnumerable<T> ObtenerColecciónCompleta();
+		IEnumerable<T> Dónde(Func<T, bool> predicate);
+		T Buscar(int id);
+		void AñadirLista(IEnumerable<T> models);
+		void Añadir(T model);
+		void Eliminar(T model);
 	}
 }

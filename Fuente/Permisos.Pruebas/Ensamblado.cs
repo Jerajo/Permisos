@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Permisos.Común.Dominio.Models;
 using Permisos.Común.Persistencia;
 using Permisos.SqlServer.Entidades;
 using Permisos.SqlServer.Perfiles;
@@ -10,13 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TestAPI.Test
+namespace Permisos.Pruebas
 {
 	[TestClass]
 	public class Ensamblado
 	{
 		#region Atributos
-		private static object _loocker = new {};
+		private static readonly object _loocker = new { };
 		private static ICollection<Permiso> _permisosFalsos;
 		private static ICollection<TipoPermiso> _tipoPermisosFalsos;
 		#endregion
@@ -36,7 +35,7 @@ namespace TestAPI.Test
 				lock (_loocker)
 				{
 					return _permisosFalsos ??
-					       (_permisosFalsos = GetPermisosFalsos());
+								 (_permisosFalsos = GetPermisosFalsos());
 				}
 			}
 		}
@@ -47,7 +46,7 @@ namespace TestAPI.Test
 				lock (_loocker)
 				{
 					return _tipoPermisosFalsos ??
-						   (_tipoPermisosFalsos = GetTipoPermisosFalsos());
+							 (_tipoPermisosFalsos = GetTipoPermisosFalsos());
 				}
 			}
 		}
@@ -67,19 +66,19 @@ namespace TestAPI.Test
 
 			DbContextoFalso = new Mock<IPermisosContexto>(MockBehavior.Loose);
 
-			DbContextoFalso.Setup(config => config.Data<Permiso>())
+			DbContextoFalso.Setup(config => config.Datos<Permiso>())
 				.Returns(() => PermisosFalsos.AsQueryable());
 
-			DbContextoFalso.Setup(config => config.Data<TipoPermiso>())
+			DbContextoFalso.Setup(config => config.Datos<TipoPermiso>())
 				.Returns(() => TipoPermisosFalsos.AsQueryable());
 
 			DbContextoFalso.Setup(config =>
-					config.AddEntity(It.IsAny<Permiso>()))
+					config.Añadir(It.IsAny<Permiso>()))
 				.Callback<Permiso>(model =>
 					PermisosFalsos.Add(model));
 
 			DbContextoFalso.Setup(config =>
-					config.RemoveEntity(It.IsAny<Permiso>()))
+					config.Eliminar(It.IsAny<Permiso>()))
 				.Callback<Permiso>(model =>
 					PermisosFalsos.Remove(model));
 
