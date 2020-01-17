@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Permisos.SqlServer;
-using System;
 using Permisos.Común.Persistencia;
 using Permisos.Común.Persistencia.Servicios;
+using Permisos.SqlServer;
 using Permisos.SqlServer.Servicios;
+using System;
 
 namespace Permisos
 {
@@ -78,7 +78,7 @@ namespace Permisos
 				app.UseExceptionHandler("/Permisos/Error");
 				app.UseHsts();
 			}
-			
+
 			app.UseStaticFiles();
 
 			app.UseRouting();
@@ -88,8 +88,14 @@ namespace Permisos
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
-									name: "default",
-									pattern: "{controller=Permisos}/{action=Index}/{id?}");
+					name: "configuraciónInicial",
+					pattern: "{controller=Permisos}/{action=Index}/{id?}");
+
+				endpoints.MapControllerRoute(
+					name: "páginaNoEncontrada",
+					pattern: "",
+					defaults: new { controller = "permisos",
+						action = "PáginaNoEncontrada" });
 			});
 		}
 	}

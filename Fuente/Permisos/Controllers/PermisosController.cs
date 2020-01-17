@@ -1,5 +1,4 @@
-﻿using Ardalis.GuardClauses;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Permisos.Común.Dominio.Models;
@@ -10,23 +9,22 @@ using System.Linq;
 
 namespace Permisos.Controllers
 {
-	[Route("[controller]/[action]")]
 	public class PermisosController : BaseController
 	{
 		public PermisosController(ILogger<PermisosController> logger,
-			IUnidadDeTrabajo unitOfWork,
-			IMapper mapper) :
-			base(logger, unitOfWork, mapper) {}
+			IUnidadDeTrabajo unidadDeTrabajo,
+			IMapper mapeador) :
+			base(logger, unidadDeTrabajo, mapeador) {}
 
 		#region GET
 		[HttpGet]
 		public IActionResult Index()
 		{
-			var permisos = UnitOfWork.Repositorio<Permiso>()
-				.GetAll()
+			var permisos = UnidadDeTrabajo.Repositorio<Permiso>()
+				.ObtenerColecciónCompleta()
 				.ToList();
-			
-			var permisoModelos = Mapper
+
+			var permisoModelos = Mapeador
 				.Map<List<PermisoDto>>(permisos);
 
 			return View(permisoModelos);
@@ -35,13 +33,13 @@ namespace Permisos.Controllers
 		[HttpGet("{permisoId}")]
 		public IActionResult VerPermiso(int permisoId)
 		{
-			var permisoEntidad = UnitOfWork.Repositorio<Permiso>()
-				.Find(permisoId);
+			var permisoEntidad = UnidadDeTrabajo.Repositorio<Permiso>()
+				.Buscar(permisoId);
 
 			if (permisoEntidad is null)
-				return RedirectToAction(nameof(ResourceNotFound));
+				return RedirectToAction(nameof(PáginaNoEncontrada));
 
-			var permisoModelo = Mapper.Map<PermisoDto>(permisoEntidad);
+			var permisoModelo = Mapeador.Map<PermisoDto>(permisoEntidad);
 
 			return View(permisoModelo);
 		}
@@ -51,11 +49,11 @@ namespace Permisos.Controllers
 		[HttpGet]
 		public IActionResult SolicitarPermiso()
 		{
-			var tipoPermisosEntidad = UnitOfWork.Repositorio<TipoPermiso>()
-				.GetAll()
+			var tipoPermisosEntidad = UnidadDeTrabajo.Repositorio<TipoPermiso>()
+				.ObtenerColecciónCompleta()
 				.ToList();
 
-			var tipoPermisosModelo = Mapper
+			var tipoPermisosModelo = Mapeador
 				.Map<List<TipoPermisoDto>>(tipoPermisosEntidad);
 
 			var permisoModelo = new PermisoParaCreaciónDto
@@ -73,21 +71,21 @@ namespace Permisos.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				var tipoPermisosEntidad = UnitOfWork.Repositorio<TipoPermiso>()
-					.GetAll()
+				var tipoPermisosEntidad = UnidadDeTrabajo.Repositorio<TipoPermiso>()
+					.ObtenerColecciónCompleta()
 					.ToList();
 
-				var tipoPermisosModelo = Mapper
+				var tipoPermisosModelo = Mapeador
 					.Map<List<TipoPermisoDto>>(tipoPermisosEntidad);
 
 				permisoModelo.TiposPermisos = tipoPermisosModelo;
 				return View(permisoModelo);
 			}
 
-			var permisoEntidad = Mapper.Map<Permiso>(permisoModelo);
+			var permisoEntidad = Mapeador.Map<Permiso>(permisoModelo);
 
-			UnitOfWork.Repositorio<Permiso>().Add(permisoEntidad);
-			UnitOfWork.Commit();
+			UnidadDeTrabajo.Repositorio<Permiso>().Añadir(permisoEntidad);
+			UnidadDeTrabajo.Guardar();
 
 			return RedirectToAction(nameof(VerPermiso),
 				new { permisoId = permisoEntidad.Id });
@@ -97,14 +95,14 @@ namespace Permisos.Controllers
 		#region DELETE
 		public IActionResult EliminarPermiso(int permisoId)
 		{
-			var permisoEntidad = UnitOfWork.Repositorio<Permiso>()
-				.Find(permisoId);
+			var permisoEntidad = UnidadDeTrabajo.Repositorio<Permiso>()
+				.Buscar(permisoId);
 
 			if (permisoEntidad is null)
-				return RedirectToAction(nameof(ResourceNotFound));
+				return RedirectToAction(nameof(PáginaNoEncontrada));
 
-			UnitOfWork.Repositorio<Permiso>().Delete(permisoEntidad);
-			UnitOfWork.Commit();
+			UnidadDeTrabajo.Repositorio<Permiso>().Eliminar(permisoEntidad);
+			UnidadDeTrabajo.Guardar();
 
 			return RedirectToAction(nameof(Index));
 		}

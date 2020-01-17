@@ -7,8 +7,6 @@ namespace Permisos.Común.Dominio.Models
 {
 	public abstract class PermisoParaManipulaciónDto
 	{
-		public int Id { get; set; }
-
 		[Required(ErrorMessageResourceName =
 			nameof(Resources.NombreEmpleadoErrorNulo),
 			ErrorMessageResourceType = typeof(Resources))]
@@ -42,10 +40,10 @@ namespace Permisos.Común.Dominio.Models
 			ErrorMessageResourceType = typeof(Resources))]
 		[Display(Name = nameof(Resources.FechaPermiso),
 			ResourceType = typeof(Resources))]
-		[DataType(DataType.Date, ErrorMessageResourceName = 
+		[DataType(DataType.Date, ErrorMessageResourceName =
 			nameof(Resources.FechaPermisoErrorDatosInvalidos),
 			ErrorMessageResourceType = typeof(Resources))]
-		[DateTimeValidador(ErrorMessageResourceName = 
+		[DateTimeValidador(ErrorMessageResourceName =
 			nameof(Resources.FechaPermisoErrorFechaMuyAntigua),
 			ErrorMessageResourceType = typeof(Resources))]
 		public DateTime FechaPermiso { get; set; }
